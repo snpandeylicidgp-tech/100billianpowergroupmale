@@ -1,32 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>100billianpowergroupmale - Join</title>
-<style>body{font-family:Arial;margin:20px;background:#f4f6fb}.card{max-width:420px;margin:30px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}input,button{width:100%;padding:10px;margin:8px 0}button{background:#007bff;color:#fff;border:none}</style>
-</head><body>
-<div class="card">
-  <h2>Join 100billianpowergroupmale</h2>
-  <form id="form">
-    <input id="name" placeholder="Full name" required>
-    <input id="mobile" placeholder="Mobile number" required>
-    <input id="dob" placeholder="DOB (YYYY-MM-DD)" required>
-    <input id="aadhar" placeholder="Aadhaar number" required>
-    <input id="parentId" placeholder="Parent ID (optional)">
-    <button type="submit">Join ₹100 (Demo)</button>
+<head>
+  <title>100 Billion Power Group</title>
+</head>
+<body>
+  <h1>Welcome to 100 Billion Power Group 🚀</h1>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>💎 10Billian Power Group Male 💎</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #f0f0f0; }
+    form { background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 0 10px gray; }
+    input { margin: 5px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 200px; }
+    button { background: green; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+    button:hover { background: darkgreen; }
+  </style>
+</head>
+<body>
+  <h2>💎 10Billian Power Group Male 💎</h2>
+  <form id="registerForm">
+    <input id="name" placeholder="Name" required><br>
+    <input id="mobile" placeholder="Mobile" required><br>
+    <input id="dob" placeholder="DOB" required><br>
+    <input id="aadhar" placeholder="Aadhar" required><br>
+    <input id="parentId" placeholder="Parent ID (optional)"><br>
+    <button type="submit">Join ₹100</button>
   </form>
-  <p id="status"></p>
-  <p><a href="/admin.html">Open Admin Panel</a></p>
-</div>
-<script>
-document.getElementById('form').addEventListener('submit', async e=>{
-  e.preventDefault();
-  const body = { name:name.value, mobile:mobile.value, dob:dob.value, aadhar:aadhar.value, parentId:parentId.value||null };
-  status.textContent = 'Registering...';
-  try{
-    const res = await fetch('/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    const json = await res.json();
-    if(res.ok) status.textContent = '✅ Joined! ID: '+json.userId;
-    else status.textContent = '❌ '+(json.message||'Error');
-  }catch(err){ status.textContent = 'Network error'; }
-});
-</script>
-</body></html>
+
+  <h3 id="status"></h3>
+
+  <script>
+    const form = document.getElementById("registerForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // सही तरीके से input values लेना
+      const nameVal = document.getElementById("name").value;
+      const mobileVal = document.getElementById("mobile").value;
+      const dobVal = document.getElementById("dob").value;
+      const aadharVal = document.getElementById("aadhar").value;
+      const parentVal = document.getElementById("parentId").value || null;
+
+      if (!nameVal || !mobileVal || !dobVal || !aadharVal) {
+        status.innerText = "कृपया सभी details भरें।";
+        return;
+      }
+
+      try {
+        const res = await fetch("/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: nameVal,
+            mobile: mobileVal,
+            dob: dobVal,
+            aadhar: aadharVal,
+            parentId: parentVal
+          })
+        });
+
+        const data = await res.json();
+        status.innerText = data.message + (data.userId ? " | ID: " + data.userId : "");
+      } catch (err) {
+        status.innerText = "Server error: " + err;
+      }
+    });
+  </script>
+</body>
+</html>
