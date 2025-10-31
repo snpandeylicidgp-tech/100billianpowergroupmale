@@ -1,39 +1,38 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>100billianpowergroupmale - Admin</title>
-<style>body{font-family:Arial;padding:20px;background:#fafafa}.wrap{max-width:900px;margin:auto}input{padding:8px;margin:6px}button{padding:8px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #eee;padding:8px}</style>
-</head><body>
-<div class="wrap">
-  <h2>Admin Panel</h2>
-  <div id="loginBox">
-    <input id="pwd" type="password" placeholder="Admin password">
-    <button onclick="login()">Login</button>
-    <p id="loginMsg"></p>
-  </div>
-  <div id="panel" style="display:none">
-    <p>Admin token active. <button onclick="logout()">Logout</button></p>
-    <input id="q" placeholder="search name/mobile/id"><button onclick="search()">Search</button>
-    <button onclick="loadAll()">Show all</button>
-    <table id="tbl"><thead><tr><th>ID</th><th>Name</th><th>Mobile</th><th>Join Date</th></tr></thead><tbody></tbody></table>
-  </div>
-</div>
-<script>
-let adminToken = null;
-async function login(){
-  const pwd = document.getElementById('pwd').value;
-  const res = await fetch('/admin-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pwd})});
-  const j = await res.json();
-  if(res.ok){ adminToken = j.token; document.getElementById('loginBox').style.display='none'; document.getElementById('panel').style.display='block'; loadAll(); }
-  else document.getElementById('loginMsg').textContent = j.message || 'Login failed';
-}
-async function loadAll(){
-  const res = await fetch('/api/members',{headers:{'x-admin-token':adminToken}});
-  if(!res.ok) return alert('Auth required');
-  const data = await res.json();
-  const tbody = document.querySelector('#tbl tbody'); tbody.innerHTML='';
-  data.forEach(m=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td>${m.id}</td><td>${m.name}</td><td>${m.mobile}</td><td>${new Date(m.joinDate||m.joinDate).toLocaleString()}</td>`; tbody.appendChild(tr); });
-}
-function logout(){ adminToken=null; document.getElementById('panel').style.display='none'; document.getElementById('loginBox').style.display='block'; }
-function search(){ const q=document.getElementById('q').value.trim().toLowerCase(); if(!q) return loadAll(); const resRows = Array.from(document.querySelectorAll('#tbl tbody tr')).filter(tr=>tr.textContent.toLowerCase().includes(q)); document.querySelector('#tbl tbody').innerHTML=''; resRows.forEach(r=>document.querySelector('#tbl tbody').appendChild(r)); }
-</script>
-</body></html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; background: #fafafa; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { border: 1px solid #ddd; padding: 8px; }
+    th { background: #007bff; color: white; }
+  </style>
+</head>
+<body>
+  <h2>Members List</h2>
+  <table id="tbl">
+    <thead>
+      <tr><th>ID</th><th>Name</th><th>Mobile</th><th>Date of Join</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+  async function loadMembers() {
+    const res = await fetch('/api/members');
+    const data = await res.json();
+    const tbody = document.querySelector("#tbl tbody");
+    tbody.innerHTML = "";
+    data.forEach(m => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${m.id}</td><td>${m.name}</td><td>${m.mobile}</td><td>${m.joinDate}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+  loadMembers();
+  </script>
+</body>
+</html>

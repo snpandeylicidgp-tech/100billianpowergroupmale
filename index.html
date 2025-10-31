@@ -1,48 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>100 Billion Power Group Male</title>
+  <title>100 Billion Power Group</title>
+</head>
+<body>
+  <h1>Welcome to 100 Billion Power Group 🚀</h1>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>💎 10Billian Power Group Male 💎</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #00bcd4, #4caf50);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-    }
-    a {
-      background-color: #fff;
-      color: #4caf50;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    a:hover {
-      background-color: #4caf50;
-      color: #fff;
-    }
+    body { font-family: Arial; text-align: center; background: #f0f0f0; }
+    form { background: white; padding: 20px; border-radius: 15px; display: inline-block; box-shadow: 0 0 10px gray; }
+    input { margin: 5px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 200px; }
+    button { background: green; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; }
+    button:hover { background: darkgreen; }
   </style>
 </head>
 <body>
-  <h1>🚀 100 Billion Power Group Male</h1>
-  <p>Your Render App is Live Successfully!</p>
-  <a href="https://github.com/snpandeyicldgp-tech/100billianpowergroupmale" target="_blank">View on GitHub</a>
+  <h2>💎 10Billian Power Group Male 💎</h2>
+  <form id="registerForm">
+    <input id="name" placeholder="Name" required><br>
+    <input id="mobile" placeholder="Mobile" required><br>
+    <input id="dob" placeholder="DOB" required><br>
+    <input id="aadhar" placeholder="Aadhar" required><br>
+    <input id="parentId" placeholder="Parent ID (optional)"><br>
+    <button type="submit">Join ₹100</button>
+  </form>
+
+  <h3 id="status"></h3>
+
+  <script>
+    const form = document.getElementById("registerForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // सही तरीके से input values लेना
+      const nameVal = document.getElementById("name").value;
+      const mobileVal = document.getElementById("mobile").value;
+      const dobVal = document.getElementById("dob").value;
+      const aadharVal = document.getElementById("aadhar").value;
+      const parentVal = document.getElementById("parentId").value || null;
+
+      if (!nameVal || !mobileVal || !dobVal || !aadharVal) {
+        status.innerText = "कृपया सभी details भरें।";
+        return;
+      }
+
+      try {
+        const res = await fetch("/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: nameVal,
+            mobile: mobileVal,
+            dob: dobVal,
+            aadhar: aadharVal,
+            parentId: parentVal
+          })
+        });
+
+        const data = await res.json();
+        status.innerText = data.message + (data.userId ? " | ID: " + data.userId : "");
+      } catch (err) {
+        status.innerText = "Server error: " + err;
+      }
+    });
+  </script>
 </body>
 </html>
