@@ -1,43 +1,37 @@
-// server.js
+const MONGO_URI = process.env.MONGO_URI || "";
 
-const express = require("express");
-const path = require("path");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const cors = require("cors");
+if (MONGO_URI) {
+  mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(()=> console.log("✅ MongoDB connected"))
+    .catch(err => console.error("MongoDB connect error:", err.message));
+} else {
+  console.warn("⚠️ MONGO_URI not set — running without DB (using local fallback).");
+}
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+require('dotenv').config();
 
-dotenv.config();
 const app = express();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// ✅ Static Files Serve (public folder)
-app.use(express.static(path.join(__dirname, "public")));
-
-// ✅ MongoDB Connection
-const mongoURI = process.env.MONGODB_URI || "your_mongodb_connection_string_here";
-
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("✅ MongoDB Connected Successfully"))
-.catch((err) => console.log("❌ MongoDB Connection Error:", err));
-
-// ✅ Default Route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// ✅ Example API Route
-app.get("/api/test", (req, res) => {
-  res.json({ message: "API working fine ✅" });
-});
-
-// ✅ Port Configuration
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.log(err));
+
+app.get('/', (req, res) => {
+  res.send('Hello, world!');
+});
+
+// Add your routes here
+
 app.listen(PORT, () => {
-  console.log(`🚀 Server running successfully on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
